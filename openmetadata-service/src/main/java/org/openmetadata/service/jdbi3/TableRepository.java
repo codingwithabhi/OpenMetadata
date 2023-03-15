@@ -1122,6 +1122,7 @@ public class TableRepository extends EntityRepository<Table> {
         updateColumnDataLength(stored, updated);
         updateColumnPrecision(stored, updated);
         updateColumnScale(stored, updated);
+        updateColumnSystemDataType(stored, updated);
         updateTags(
             stored.getFullyQualifiedName(),
             EntityUtil.getFieldName(fieldName, updated.getName(), FIELD_TAGS),
@@ -1149,8 +1150,8 @@ public class TableRepository extends EntityRepository<Table> {
     }
 
     private void updateColumnDisplayName(Column origColumn, Column updatedColumn) throws JsonProcessingException {
-      if (operation.isPut() && !nullOrEmpty(origColumn.getDescription()) && updatedByBot()) {
-        // Revert the non-empty task description if being updated by a bot
+      if (operation.isPut() && !nullOrEmpty(origColumn.getDisplayName()) && updatedByBot()) {
+        // Revert the non-empty display name if being updated by a bot
         updatedColumn.setDisplayName(origColumn.getDisplayName());
         return;
       }
@@ -1161,6 +1162,11 @@ public class TableRepository extends EntityRepository<Table> {
     private void updateColumnConstraint(Column origColumn, Column updatedColumn) throws JsonProcessingException {
       String columnField = getColumnField(original, origColumn, "constraint");
       recordChange(columnField, origColumn.getConstraint(), updatedColumn.getConstraint());
+    }
+
+    private void updateColumnSystemDataType(Column origColumn, Column updatedColumn) throws JsonProcessingException {
+      String columnField = getColumnField(original, origColumn, "systemDataType");
+      recordChange(columnField, origColumn.getSystemDataType(), updatedColumn.getSystemDataType());
     }
 
     protected void updateColumnDataLength(Column origColumn, Column updatedColumn) throws JsonProcessingException {
