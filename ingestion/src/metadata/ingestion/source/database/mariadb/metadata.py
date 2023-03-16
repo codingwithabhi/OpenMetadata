@@ -11,6 +11,10 @@
 """
 MariaDB source module
 """
+from sqlalchemy.dialects.mysql.base import ischema_names
+from sqlalchemy.dialects.mysql.mariadb import MariaDBDialect
+from sqlalchemy.sql.sqltypes import String
+
 from metadata.generated.schema.entity.services.connections.database.mariaDBConnection import (
     MariaDBConnection,
 )
@@ -21,7 +25,22 @@ from metadata.generated.schema.metadataIngestion.workflow import (
     Source as WorkflowSource,
 )
 from metadata.ingestion.api.source import InvalidSourceException
+from metadata.ingestion.source.database.column_type_parser import create_sqlalchemy_type
 from metadata.ingestion.source.database.common_db_source import CommonDbSourceService
+
+ischema_names.update(
+    {
+        "year": create_sqlalchemy_type("YEAR"),
+        "longtext": create_sqlalchemy_type("LONGTEXT"),
+        "tinytext": create_sqlalchemy_type("TINYTEXT"),
+        "BOOL": create_sqlalchemy_type("BOOL"),
+        "MEDIUMINT": create_sqlalchemy_type("MEDIUMINT"),
+        "TINYBLOB": create_sqlalchemy_type("TINYBLOB"),
+    }
+)
+
+
+MariaDBDialect.ischema_names = ischema_names
 
 
 class MariadbSource(CommonDbSourceService):

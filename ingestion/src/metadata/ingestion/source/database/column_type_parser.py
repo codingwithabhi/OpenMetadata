@@ -114,7 +114,7 @@ class ColumnTypeParser:
         "GEOGRAPHY": "GEOGRAPHY",
         "GEOMETRY": "GEOMETRY",
         "HYPERLOGLOG": "BINARY",
-        "IMAGE": "BINARY",
+        "IMAGE": "BLOB",
         "INT": "INT",
         "INT2": "SMALLINT",
         "INT4": "INT",
@@ -221,6 +221,12 @@ class ColumnTypeParser:
         "CLOB": "CLOB",
         "NCLOB": "CLOB",
         "LONG": "LONG",
+        "YEAR": "YEAR",
+        "LONGTEXT": "VARCHAR",
+        "TINYTEXT": "TINYTEXT",
+        "MEDIUMINT": "INT",
+        "TINYBLOB": "TINYBLOB",
+        "BIT": "BIT",
     }
 
     _COMPLEX_TYPE = re.compile("^(struct|map|array|uniontype)")

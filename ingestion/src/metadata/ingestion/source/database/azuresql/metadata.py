@@ -10,6 +10,10 @@
 #  limitations under the License.
 """Azure SQL source module"""
 
+from sqlalchemy.dialects.mssql.base import ischema_names
+from sqlalchemy.dialects.mssql.pyodbc import MSDialect_pyodbc
+from sqlalchemy.sql.sqltypes import String
+
 from metadata.generated.schema.entity.services.connections.database.azureSQLConnection import (
     AzureSQLConnection,
 )
@@ -20,7 +24,33 @@ from metadata.generated.schema.metadataIngestion.workflow import (
     Source as WorkflowSource,
 )
 from metadata.ingestion.api.source import InvalidSourceException
+from metadata.ingestion.source.database.column_type_parser import create_sqlalchemy_type
 from metadata.ingestion.source.database.common_db_source import CommonDbSourceService
+
+ischema_names.update(
+    {
+        "nvarchar": create_sqlalchemy_type("NVARCHAR"),
+        "nchar": create_sqlalchemy_type("NCHAR"),
+        "ntext": create_sqlalchemy_type("NTEXT"),
+        "bit": create_sqlalchemy_type("BIT"),
+        "image": create_sqlalchemy_type("IMAGE"),
+        "binary": create_sqlalchemy_type("BINARY"),
+        "smallmoney": create_sqlalchemy_type("SMALLMONEY"),
+        "money": create_sqlalchemy_type("MONEY"),
+        "real": create_sqlalchemy_type("REAL"),
+        "smalldatetime": create_sqlalchemy_type("SMALLDATETIME"),
+        "datetime2": create_sqlalchemy_type("DATETIME2"),
+        "datetimeoffset": create_sqlalchemy_type("DATETIMEOFFSET"),
+        "sql_variant": create_sqlalchemy_type("SQL_VARIANT"),
+        "uniqueidentifier": create_sqlalchemy_type("UNIQUEIDENTIFIER"),
+        "xml": create_sqlalchemy_type("XML"),
+        "geography": create_sqlalchemy_type("GEOGRAPHY"),
+        "geometry": create_sqlalchemy_type("GEOMETRY"),
+    }
+)
+
+
+MSDialect_pyodbc.ischema_names = ischema_names
 
 
 class AzuresqlSource(CommonDbSourceService):
